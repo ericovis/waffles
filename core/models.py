@@ -2,8 +2,6 @@ import uuid0
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
-from django.dispatch import receiver
-from django_mysql.models import JSONField
 from .managers import UserManager
 from .utils import Base62
 
@@ -59,17 +57,11 @@ class Url(models.Model):
    
     @property
     def clicks_count(self):
-        return len(self.clicks.all())
+        return self.clicks.count()
     
 
 class Click(CustomIdModel):
     url = models.ForeignKey(Url, related_name='clicks', on_delete=models.CASCADE)
-    data = JSONField(default=dict)
+    referer = models.URLField(blank=True, null=True)
+    user_agent = models.CharField(max_length=300, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
-
-
-@receiver(models.signals.post_save, sender=Url)
-def generate_slug(sender, instance, created, **kwargs):
-    if created and not instance.slug:
-        instance.slug = Base62.encode(instance.pk)
-        instance.save()

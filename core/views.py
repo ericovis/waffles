@@ -2,9 +2,9 @@ from rest_framework import viewsets, mixins
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.core.signals import request_finished
+from django.views.generic.base import View
 from django.dispatch import receiver
 from . import models, serializers
-
 
 
 class UrlViewset(
@@ -26,7 +26,6 @@ class UrlViewset(
         return get_object_or_404(models.Url, slug=self.kwargs.get('pk'))
 
 
-
 class ClickViewset(
                    viewsets.GenericViewSet,
                    mixins.RetrieveModelMixin,
@@ -44,14 +43,21 @@ class ClickViewset(
         return models.Click.objects.filter(url=url)
 
 
-def redirect(request, slug):
-    url = get_object_or_404(models.Url, slug=slug)
+class RedirectView(View):
+    def process_click_data(self, click):
+        headers = dict(self.request.headers)
+        click.user_agent = headers.get('User-Agent')
+        click.referer=headers.get('Referer')
+        click.save()
+        return click
 
-    response = HttpResponse(status=301)
-    response['Location'] = url.target
+    def dispatch(self, request, slug, *args, **kwargs):
+        url = get_object_or_404(models.Url, slug=slug)
 
-    click = models.Click(url=url)
-    click.data = dict(request.headers)
-    click.save()
+        click = self.process_click_data(models.Click(url=url))
 
-    return response
+        response = HttpResponse(status=301)
+        response['Location'] = url.target       
+        response['Cache-Control'] = 'no-cache'
+
+        return response

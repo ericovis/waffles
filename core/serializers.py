@@ -11,10 +11,13 @@ def check_if_slug_exists(value):
 
 class ViewUrlSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()    
-    clicks_count = serializers.ReadOnlyField()    
+    clicks = serializers.SerializerMethodField()
     class Meta:
         model = models.Url
         exclude = ('id', )
+
+    def get_clicks(self, obj):
+        return obj.clicks_count
 
 
 class CreateUrlSerializer(serializers.ModelSerializer):
@@ -27,4 +30,4 @@ class CreateUrlSerializer(serializers.ModelSerializer):
 class ClickSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Click
-        exclude = ('url', )
+        exclude = ('url', 'id')
