@@ -45,6 +45,7 @@ class User(AbstractBaseUser, CustomIdModel):
         'active',
         default=True,
     )
+    is_staff = False
 
 
 class Url(models.Model):

@@ -11,7 +11,8 @@ django = "*"
 djangorestframework = "*"
 mysqlclient = "*"
 uuid0 = "*"
-django-mysql = "*"
+djoser = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.8"

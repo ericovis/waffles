@@ -9,6 +9,29 @@ def check_if_slug_exists(value):
     return value
 
 
+class UserSerializer(serializers.ModelSerializer):
+    is_active = serializers.ReadOnlyField()
+    last_login = serializers.ReadOnlyField()
+    class Meta:
+        model = models.User
+        exclude = ('password',)
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = (
+            'first_name',
+            'last_name',
+            'email',
+            'password'
+        )
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+
+
 class ViewUrlSerializer(serializers.ModelSerializer):
     slug = serializers.ReadOnlyField()    
     clicks = serializers.SerializerMethodField()
