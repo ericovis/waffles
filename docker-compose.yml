@@ -1,0 +1,11 @@
+version: '3.4'
+services:
+  db:
+    image: mysql:8
+    environment: 
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: waffles
+    ports:
+      - 3306:3306
+    volumes:
+      - ./.docker-data/mysql:/var/lib/mysql 
