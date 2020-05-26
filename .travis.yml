@@ -1,0 +1,15 @@
+language: python
+python:
+  - "3.8"
+services:
+  - docker
+install:
+  - pip install pipenv
+  - pipenv install --dev --system
+before_script:
+  - docker-compose up -d
+  - sleep 5
+script:
+  - coverage run manage.py test
+after_script:
+  - coverage_report

@@ -5,12 +5,15 @@ verify_ssl = true
 
 [dev-packages]
 honcho = "*"
+coverage = "*"
 
 [packages]
 django = "*"
 djangorestframework = "*"
 uuid0 = "*"
 psycopg2-binary = "*"
+django-cors-headers = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.8"

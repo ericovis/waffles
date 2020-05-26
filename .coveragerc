@@ -1,0 +1,14 @@
+[run]
+
+source = 
+    core
+    waffles
+
+omit =
+    */tests/*
+    */migrations/*
+    */tests.py
+    */__init__.py
+    waffles/settings.py
+    waffles/local_settings.py
+    waffles/wsgi.py

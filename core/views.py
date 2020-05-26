@@ -14,6 +14,9 @@ class UrlViewset(
                  mixins.ListModelMixin,
                  mixins.RetrieveModelMixin
                 ):
+    """
+    This view manages the URL objects
+    """
     def get_queryset(self):
         return models.Url.objects.all()
 
@@ -32,6 +35,9 @@ class ClickViewset(
                    mixins.RetrieveModelMixin,
                    mixins.ListModelMixin
                   ):
+    """
+    This view manages the Click objects related to a specific URL
+    """
     serializer_class = serializers.ClickSerializer
 
 
@@ -45,6 +51,9 @@ class ClickViewset(
 
 
 class RedirectView(View):
+    """
+    This handles redirects
+    """
     def get_client_ip(self):
         x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
@@ -57,7 +66,7 @@ class RedirectView(View):
         headers = dict(self.request.headers)
         click.user_agent = headers.get('User-Agent')
         click.referer=headers.get('Referer')
-        clicl.client_ip = self.get_client_ip()
+        click.client_ip = self.get_client_ip()
         click.save()
         return click
     
