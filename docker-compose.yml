@@ -1,16 +1,11 @@
 version: '3.4'
 services:
   db:
-    image: mysql:8
-    environment: 
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: waffles
-    ports:
-      - 3306:3306
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: waffles_dev
     volumes:
-      - ./.docker-data/mysql:/var/lib/mysql 
-  mail:
-    image: schickling/mailcatcher
+      - .docker-data/pg:/var/lib/postgresql/data
     ports:
-      - 1025:1025
-      - 1080:1080
+      - 5432:5432

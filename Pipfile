@@ -9,10 +9,8 @@ honcho = "*"
 [packages]
 django = "*"
 djangorestframework = "*"
-mysqlclient = "*"
 uuid0 = "*"
-djoser = "*"
-djangorestframework-simplejwt = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.8"

@@ -14,8 +14,9 @@ class UrlViewset(
                  mixins.ListModelMixin,
                  mixins.RetrieveModelMixin
                 ):
-    queryset = models.Url.objects.all()
-    
+    def get_queryset(self):
+        return models.Url.objects.filter(account=self.request.user.account)
+
     def get_serializer_class(self):
         if self.action == 'create':
             return serializers.CreateUrlSerializer
@@ -24,6 +25,9 @@ class UrlViewset(
     
     def get_object(self):
         return get_object_or_404(models.Url, slug=self.kwargs.get('pk'))
+    
+    def perform_create(self, serializer):
+        return serializer.save(account=self.request.user.account)
 
 
 class ClickViewset(
@@ -44,20 +48,30 @@ class ClickViewset(
 
 
 class RedirectView(View):
+    def get_client_ip(self):
+        x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = self.request.META.get('REMOTE_ADDR')
+        return ip
+
     def process_click_data(self, click):
         headers = dict(self.request.headers)
         click.user_agent = headers.get('User-Agent')
         click.referer=headers.get('Referer')
+        clicl.client_ip = self.get_client_ip()
         click.save()
         return click
-
-    def dispatch(self, request, slug, *args, **kwargs):
-        url = get_object_or_404(models.Url, slug=slug)
-
-        click = self.process_click_data(models.Click(url=url))
-
+    
+    def get_response(self, url):
         response = HttpResponse(status=301)
         response['Location'] = url.target       
         response['Cache-Control'] = 'no-cache'
+        return response
 
+    def dispatch(self, request, slug, *args, **kwargs):
+        url = get_object_or_404(models.Url, slug=slug)
+        click = self.process_click_data(models.Click(url=url))
+        response = self.get_response(url)
         return response

@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
     last_login = serializers.ReadOnlyField()
     class Meta:
         model = models.User
-        exclude = ('password',)
+        exclude = ('password', 'account', )
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -37,7 +37,7 @@ class ViewUrlSerializer(serializers.ModelSerializer):
     clicks = serializers.SerializerMethodField()
     class Meta:
         model = models.Url
-        exclude = ('id', )
+        exclude = ('id', 'account', )
 
     def get_clicks(self, obj):
         return obj.clicks_count
