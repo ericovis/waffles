@@ -9,6 +9,7 @@ class UrlAdmin(admin.ModelAdmin):
     list_display = ('slug', 'target', 'created_on')
     search_fields = ('slug', 'target', 'created_on')
     list_filter = ('slug', 'target', 'created_on')
+    readonly_fields = ('clicks_count',)
 
 class ClickAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
