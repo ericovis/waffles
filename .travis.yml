@@ -12,4 +12,4 @@ before_script:
 script:
   - coverage run manage.py test
 after_script:
-  - coverage_report
+  - coverage report
