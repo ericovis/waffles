@@ -15,7 +15,7 @@ class UrlViewset(
                  mixins.RetrieveModelMixin
                 ):
     def get_queryset(self):
-        return models.Url.objects.filter(account=self.request.user.account)
+        return models.Url.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -25,9 +25,6 @@ class UrlViewset(
     
     def get_object(self):
         return get_object_or_404(models.Url, slug=self.kwargs.get('pk'))
-    
-    def perform_create(self, serializer):
-        return serializer.save(account=self.request.user.account)
 
 
 class ClickViewset(

@@ -2,6 +2,7 @@ from django.dispatch import receiver
 from django.core.signals import request_finished
 from django.db import models
 from .models import Url
+from .utils import Base62
 
 
 @receiver(models.signals.post_save, sender=Url)
